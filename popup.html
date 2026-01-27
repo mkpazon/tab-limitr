@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 400px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+    }
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .status {
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .status.over-limit {
+      background: #ffebee;
+      color: #c62828;
+    }
+    .status.at-limit {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+    .tabs-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .tab-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tab-item:hover {
+      background: #f5f5f5;
+    }
+    .tab-favicon {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .tab-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+    .close-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .close-btn:hover {
+      background: #d32f2f;
+    }
+    .settings-link {
+      display: block;
+      text-align: center;
+      color: #1976d2;
+      text-decoration: none;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .settings-link:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .setting-group {
+      margin-bottom: 16px;
+    }
+    .setting-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+      font-size: 14px;
+    }
+    .setting-group input[type="number"] {
+      width: 80px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #777;
+      margin-top: 4px;
+    }
+    .settings-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .settings-buttons button {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .settings-buttons button:hover {
+      background: #1565c0;
+    }
+    .settings-buttons button.secondary {
+      background: #757575;
+    }
+    .settings-buttons button.secondary:hover {
+      background: #616161;
+    }
+    .success-message {
+      color: #2e7d32;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .error-message {
+      color: #c62828;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="tabsView">
+    <h2>Tab Limitr</h2>
+    <div id="status" class="status"></div>
+    <div id="tabsList" class="tabs-list"></div>
+    <a id="settingsLink" class="settings-link">Settings</a>
+  </div>
+
+  <div id="settingsView" class="hidden">
+    <h2>Settings</h2>
+    <div class="setting-group">
+      <label for="tabLimit">Maximum tabs per window:</label>
+      <input type="number" id="tabLimit" min="1" max="100" value="10">
+      <div class="help-text">Set the maximum number of tabs allowed (1-100)</div>
+    </div>
+    <div class="settings-buttons">
+      <button id="saveBtn">Save</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+      <button id="backBtn" class="secondary">Back</button>
+    </div>
+    <div id="successMessage" class="success-message hidden">Settings saved!</div>
+    <div id="errorMessage" class="error-message hidden">Enter a number between 1 and 100.</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

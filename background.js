@@ -61,13 +61,17 @@ async function updateBadge(windowId, count = null) {
     count = tabs.length;
   }
 
+  const activeTab = (await chrome.tabs.query({ windowId, active: true }))[0];
+  if (!activeTab) return;
+
   chrome.action.setBadgeText({
     text: `${count}/${tabLimit}`,
-    tabId: (await chrome.tabs.query({ windowId, active: true }))[0]?.id
+    tabId: activeTab.id
   });
 
   chrome.action.setBadgeBackgroundColor({
-    color: count > tabLimit ? '#ff0000' : count === tabLimit ? '#ff9900' : '#4caf50'
+    color: count > tabLimit ? '#ff0000' : count === tabLimit ? '#ff9900' : '#4caf50',
+    tabId: activeTab.id
   });
 }
 

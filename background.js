@@ -2,10 +2,10 @@ const DEFAULT_TAB_LIMIT = 10;
 
 let tabLimit = DEFAULT_TAB_LIMIT;
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.get(['tabLimit'], (result) => {
-    tabLimit = result.tabLimit || DEFAULT_TAB_LIMIT;
-  });
+// Load saved tab limit on service worker startup (not just on install)
+chrome.storage.sync.get(['tabLimit']).then((result) => {
+  tabLimit = result.tabLimit || DEFAULT_TAB_LIMIT;
+  updateAllBadges();
 });
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -16,12 +16,16 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 chrome.tabs.onCreated.addListener(async (tab) => {
-  const tabs = await chrome.tabs.query({ windowId: tab.windowId });
+  const [tabs, { tabLimit: currentLimit }] = await Promise.all([
+    chrome.tabs.query({ windowId: tab.windowId }),
+    chrome.storage.sync.get(['tabLimit'])
+  ]);
   const tabCount = tabs.length;
+  const limit = currentLimit || DEFAULT_TAB_LIMIT;
 
   updateBadge(tab.windowId, tabCount);
 
-  if (tabCount > tabLimit) {
+  if (tabCount > limit) {
     await chrome.tabs.remove(tab.id);
     chrome.action.openPopup();
   }
@@ -32,12 +36,16 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 });
 
 chrome.tabs.onAttached.addListener(async (tabId, attachInfo) => {
-  const tabs = await chrome.tabs.query({ windowId: attachInfo.newWindowId });
+  const [tabs, { tabLimit: currentLimit }] = await Promise.all([
+    chrome.tabs.query({ windowId: attachInfo.newWindowId }),
+    chrome.storage.sync.get(['tabLimit'])
+  ]);
   const tabCount = tabs.length;
+  const limit = currentLimit || DEFAULT_TAB_LIMIT;
 
   updateBadge(attachInfo.newWindowId, tabCount);
 
-  if (tabCount > tabLimit) {
+  if (tabCount > limit) {
     await chrome.tabs.remove(tabId);
     chrome.action.openPopup();
   }

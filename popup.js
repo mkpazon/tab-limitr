@@ -62,6 +62,59 @@ async function loadPopup() {
 
     tabsListDiv.appendChild(tabItem);
   });
+
+  await loadBlockedTabs();
+}
+
+async function loadBlockedTabs() {
+  const { blockedTabs = [] } = await chrome.storage.session.get(['blockedTabs']);
+  const section = document.getElementById('blockedSection');
+  const list = document.getElementById('blockedList');
+
+  if (blockedTabs.length === 0) {
+    section.classList.add('hidden');
+    return;
+  }
+
+  section.classList.remove('hidden');
+  list.innerHTML = '';
+
+  blockedTabs.forEach(entry => {
+    const item = document.createElement('div');
+    item.className = 'tab-item blocked';
+
+    const favicon = document.createElement('img');
+    favicon.className = 'tab-favicon';
+    favicon.src = entry.favIconUrl || 'icons/icon16.png';
+
+    const title = document.createElement('span');
+    title.className = 'tab-title';
+    title.textContent = entry.title || entry.url;
+    title.title = entry.url;
+
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'retry-btn';
+    retryBtn.textContent = 'Retry';
+    retryBtn.onclick = async (e) => {
+      e.stopPropagation();
+      await chrome.runtime.sendMessage({ type: 'retryTab', url: entry.url });
+    };
+
+    const dismissBtn = document.createElement('button');
+    dismissBtn.className = 'dismiss-btn';
+    dismissBtn.textContent = 'Dismiss';
+    dismissBtn.onclick = async (e) => {
+      e.stopPropagation();
+      await chrome.runtime.sendMessage({ type: 'removeBlockedTab', timestamp: entry.timestamp });
+      loadPopup();
+    };
+
+    item.appendChild(favicon);
+    item.appendChild(title);
+    item.appendChild(retryBtn);
+    item.appendChild(dismissBtn);
+    list.appendChild(item);
+  });
 }
 
 // View elements

@@ -73,6 +73,49 @@
     .close-btn:hover {
       background: #d32f2f;
     }
+    .blocked-section {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed #ccc;
+    }
+    .blocked-section h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #c62828;
+    }
+    .tab-item.blocked {
+      border: 1px dashed #e57373;
+      background: #fff8f8;
+    }
+    .tab-item.blocked:hover {
+      background: #ffebee;
+    }
+    .retry-btn {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .retry-btn:hover {
+      background: #388e3c;
+    }
+    .dismiss-btn {
+      background: #9e9e9e;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+    .dismiss-btn:hover {
+      background: #757575;
+    }
     .settings-link {
       display: block;
       text-align: center;
@@ -149,6 +192,10 @@
     <h2>Tab Limitr</h2>
     <div id="status" class="status"></div>
     <div id="tabsList" class="tabs-list"></div>
+    <div id="blockedSection" class="blocked-section hidden">
+      <h3>Blocked Tabs</h3>
+      <div id="blockedList"></div>
+    </div>
     <a id="settingsLink" class="settings-link">Settings</a>
   </div>
 
